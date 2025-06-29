@@ -9,10 +9,7 @@ import com.sebastian.LiterAlura.repository.LibroRepository;
 import com.sebastian.LiterAlura.service.ConsultaAPI;
 import com.sebastian.LiterAlura.service.ConvertirDatos;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class Principal {
     //ATRIBUTOS
@@ -60,6 +57,9 @@ public class Principal {
                     case 5:
                         mostrarLibrosPorIdioma();
                         break;
+                    case 6:
+                        top5LibrosDescargas();
+                        break;
                     case 0:
                         System.out.println("👍 ¡Gracias por usar LiterAlura!");
                         break;
@@ -95,7 +95,7 @@ public class Principal {
                 System.out.println(libro);
                 System.out.println("Información: ✅¡Libro agregado exitozamente!");
             } catch (Exception e) {
-                System.out.println("Información: ❌ El libro con titulo -" + libro.getTitulo() + "-, ya existe en la Base de datos...");
+                System.out.println("Información: ❌El libro con titulo -" + libro.getTitulo() + "-, ya existe en la Base de datos...");
             }
         }
     }
@@ -115,19 +115,21 @@ public class Principal {
             System.out.println("Información: ✅Completado.");
             return datosLibroEncontrado.get();
         } else {
-            System.out.println("Información: ❌ El libro con titulo -" + tituloLibro + "-, no fue encontrado.");
+            System.out.println("Información: ❌El libro con titulo -" + tituloLibro + "-, no fue encontrado.");
             return null;
         }
     }
 
     private void mostrarLibrosRegistrados() {
         librosRegistrados = libroRepository.findAll();
+        System.out.println("Información: ✅Completado.");
         System.out.println("---------- LIBROS REGISTRADOS: ----------");
         librosRegistrados.forEach(System.out::println);
     }
 
     private void mostrarAutoresRegistrados() {
         autoresRegistrados = autorRepository.findAll();
+        System.out.println("Información: ✅Completado.");
         System.out.println("---------- AUTORES REGISTRADOS: ----------");
         autoresRegistrados.forEach(System.out::println);
     }
@@ -139,10 +141,11 @@ public class Principal {
 
         autoresRegistrados = autorRepository.buscarAutoresAnioD(valorIngresado);
 
-        if (autoresRegistrados != null) {
-            autoresRegistrados.forEach(System.out::println);
+        if (autoresRegistrados.isEmpty()) {
+            System.out.println("Información: ❌Busqueda fallida...");
         } else {
-            System.out.println("Información: ❌ Busqueda fallida...");
+            System.out.println("Información: ✅Completado.");
+            autoresRegistrados.forEach(System.out::println);
         }
     }
 
@@ -151,18 +154,24 @@ public class Principal {
         System.out.println("en - Ingles\nes - Español\nIngrese: ");
         var opcionIdioma = teclado.nextLine();
 
-        if (opcionIdioma.equals("en")) {
-            obtenerDatosLibrosI(opcionIdioma);
-        } else if (opcionIdioma.equals("es")) {
-            obtenerDatosLibrosI(opcionIdioma);
+        librosRegistrados = libroRepository.buscarLibroPorIdioma(opcionIdioma);
+
+        if (librosRegistrados.isEmpty()) {
+            System.out.println("Información: ❌Busqueda fallida...");
         } else {
-            System.out.println("La opción " + opcionIdioma + ", no fue encontrada...");
+            System.out.println("Información: ✅Completado.");
+            librosRegistrados.forEach(System.out::println);
         }
     }
 
-    private void obtenerDatosLibrosI(String opcion) {
-        librosRegistrados = libroRepository.buscarLibroPorIdioma(opcion);
-        librosRegistrados.forEach(System.out::println);
+    private void top5LibrosDescargas() {
+        librosRegistrados = libroRepository.findAll();
+        System.out.println("---------- TOP 5 LIBROS: ----------");
+
+        librosRegistrados.stream()
+                .sorted(Comparator.comparing(Libro::getDescargas).reversed())
+                .limit(5)
+                .forEach(System.out::println);
     }
 
     public void menu() {
@@ -176,6 +185,7 @@ public class Principal {
                 *  4 - Mostrar autores en un          *
                 *      determinado año.               *
                 *  5 - Mostrar libros por idioma.     *
+                *  6 - Top 5 libros mas decargados.   *
                 *  0 - Salir.                         *
                 ***************************************""";
 

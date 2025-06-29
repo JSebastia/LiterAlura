@@ -41,13 +41,11 @@ public class Autor {
             nombreLibrosAutor.add(libroAutor.getTitulo());
         }
 
-        String informacion =
-                "*****************\n" +
-                "Datos Autor: \n" +
-                "Nombre: " + nombre + "| Fecha nacimiento: " + fechaNacimiento +  "| Fecha fallecimiento: " + fechaFallecimiento + " | Libros: " + nombreLibrosAutor +
-                "\n*****************";
-
-        return informacion;
+        return "---- \uD83D\uDCD6Datos autor: ----" + "\n" +
+                "Nombre: " + nombre + "\n" +
+                "Fecha nacimiento: " + fechaNacimiento + "\n" +
+                "Fecha fallecimiento: " + fechaFallecimiento + "\n" +
+                "Libros: " + nombreLibrosAutor + "\n";
     }
 
     //Getters and Setters

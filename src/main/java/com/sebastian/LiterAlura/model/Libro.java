@@ -32,10 +32,12 @@ public class Libro {
     @Override
     public String toString() {
         String informacion = """
-                ******************
-                📕Datos libro: 
-                🔖Titulo: %s | Descargas: %d | Idioma: %s | Autor: %s
-                ******************""".formatted(titulo, descargas, lenguaje, autor.getNombre());
+                ---- 📕Datos libro: ----
+                Titulo: %s 
+                Descargas: %d
+                Idioma: %s 
+                Autor: %s
+                """.formatted(titulo, descargas, lenguaje, autor.getNombre());
 
         return informacion;
     }
